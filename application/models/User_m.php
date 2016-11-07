@@ -108,6 +108,11 @@ class User_m extends CI_Model
 				return false;
 			}
 			
+			if($p_id != "" ){
+				$query = $this->db->query("SELECT product_commision FROM product WHERE id=" . $this->db->escape($p_id))->row(); 
+				$DBordered['transaction_commision']= $query->product_commision;
+			}
+			
 			if($product_quantity != "" && !is_numeric($product_quantity)){
 				$this->set_message("error", "Quantity contain only digit");
 				return false;
