@@ -249,6 +249,21 @@ class User_m extends CI_Model
 		
 	}
 	
+	function addproduct(){
+		if($this->input->post()){
+			$target_dir = "uploads/";
+			
+			if($_FILES["product_image"]["name"]=='')
+				exit("test1");
+			else if	($_FILES["product_image"]["name"]!='')
+				exit("test2");
+			$product_name = $this->input->post('product_name');
+			$product_price = $this->input->post('product_price');
+			$product_commission = $this->input->post('product_commission');
+		}
+		
+	}
+	
 	function set_message($status,$mesej)
 	{
 		$this->session->set_flashdata($status,$mesej);
