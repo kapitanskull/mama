@@ -1,7 +1,7 @@
 	<?php $this->load->view('user/header'); ?>
 	<!-- BEGIN PAGE LEVEL PLUGINS -->
-	<link href="<?php echo base_url();?>assets/global/plugins/bootstrap-datepicker/css/bootstrap-datepicker3.min.css" rel="stylesheet" type="text/css" />
-	<link href="<?php echo base_url();?>assets/global/plugins/bootstrap-daterangepicker/daterangepicker.min.css" rel="stylesheet" type="text/css" />
+	<link href="<?php echo base_url();?>assets/global/plugins/bootstrap-fileinput/bootstrap-fileinput.css" rel="stylesheet" type="text/css" />
+	
 	<!-- END PAGE LEVEL PLUGINS -->
            
                         <!-- BEGIN PAGE TITLE-->
@@ -28,7 +28,7 @@
 									</div>
 									<div class="portlet-body form">
 										<!-- BEGIN FORM-->
-										<form action="<?php echo base_url(); ?>user/add" class="form-horizontal" method="post">
+										<form action="<?php echo base_url(); ?>user/add_product" class="form-horizontal" method="post" enctype="multipart/form-data" accept-charset="utf-8">
 											<div class="form-body">
 												<div class="row">
 													<div class="col-md-6">
@@ -74,25 +74,23 @@
 												<div class="row">
 													<div class="col-md-6">
 														<div class="form-group">
-															<label class="control-label col-md-4"></label>
-															<div class="col-md-6">
-																upload button
+															<label class="control-label col-md-4">Product Image</label>
+															<div class="col-md-4">
+																<div class="fileinput fileinput-new" data-provides="fileinput">
+																	<div class="fileinput-preview thumbnail" data-trigger="fileinput" style="width: 200px; height: 150px;"> </div>
+																	<div>
+																		<span class="btn purple-seance btn-outline btn-file">
+																		<span class="fileinput-new"><i class="fa fa-upload"></i> Select image </span>
+																		<span class="fileinput-exists"> Change </span>
+																		<input type="file" name="product_image"> </span>
+																		<a href="javascript:;" class="btn red fileinput-exists" data-dismiss="fileinput"> Remove </a>
+																	</div>
+																</div>
 															</div>
 														</div>
 													</div>
-													<div class="col-md-6">
-														<div class="form-group">
-															<label class="control-label col-md-4">Preview Image</label>
-															<div class="col-md-6">
-																	<img src="<?php echo base_url(); ?>" width="30%">
-																</div>
-																
-															</div>
-													</div>
 												</div>
-												<div class="row">
-													
-												</div>
+												
 												<!--/row-->
 											</div>
 											<div class="form-actions">
@@ -124,13 +122,12 @@
 			<?php $this->load->view('user/footer'); ?>
 			<!-- BEGIN PAGE LEVEL SCRIPTS -->
 			<script src="<?php echo base_url();?>assets/pages/scripts/form-samples.min.js" type="text/javascript"></script>
-			<script src="<?php echo base_url();?>assets/pages/scripts/components-date-time-pickers.min.js" type="text/javascript"></script>
+			<script src="<?php echo base_url();?>assets/global/plugins/bootstrap-fileinput/bootstrap-fileinput.js" type="text/javascript"></script>
 			<!-- END PAGE LEVEL SCRIPTS -->
 			<!-- BEGIN PAGE LEVEL PLUGIN -->
 			
 			<script src="<?php echo base_url();?>assets/global/plugins/moment.min.js" type="text/javascript"></script>
-			<script src="<?php echo base_url();?>assets/global/plugins/bootstrap-daterangepicker/daterangepicker.min.js" type="text/javascript"></script>
-			<script src="<?php echo base_url();?>assets/global/plugins/bootstrap-datepicker/js/bootstrap-datepicker.min.js" type="text/javascript"></script>
+			
 			<!-- END PAGE LEVEL PLUGIN -->
 			<script>
 			
