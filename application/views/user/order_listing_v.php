@@ -178,8 +178,10 @@
 													?>
 											<?php	
 											}
-										}
+										} else {
 										?>
+										<td> No order data to be listed </td>
+										<?php }?>
 										</tbody>
 									</table>
 									<?php echo $pagination; ?> 
