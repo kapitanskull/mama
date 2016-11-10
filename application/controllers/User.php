@@ -104,7 +104,7 @@ class User extends CI_Controller {
 		$data['sub_nav_active'] = "add_product";
 		
 		if($this->input->post()){
-			$rc = $this->user_m->addcustomer();
+			$rc = $this->user_m->addproduct();
 			
 			if($rc == false){
 				$data['post'] = $this->input->post();
@@ -112,7 +112,7 @@ class User extends CI_Controller {
 				$this->load->view('user/add_product_v',$data);
 			}
 			else{
-				echo"berjaya";
+				
 				redirect('user/product_listing');
 			}
 		}
