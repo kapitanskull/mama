@@ -305,7 +305,7 @@ class User_m extends CI_Model
 					#case - success
 					$upload_data = $this->upload->data();
 					$path = $upload_data['file_name'];
-					$DBproduct['product_image_path'] = $folder_name. "/" .$path;
+					$DBproduct['product_image_path'] = $image_path . $folder_name . "/" . $path;
 					
 				}
 			}
@@ -346,10 +346,32 @@ class User_m extends CI_Model
 				$sql = ' LIMIT 0, ' . $config['per_page'];
 			}
 		}
-		$query = $this->db->query("SELECT * FROM product ORDER BY id DESC" .  $sql);
+		$query = $this->db->query("SELECT * FROM product WHERE product_registrar_id=" . $this->db->escape($userid) . "ORDER BY id DESC" .  $sql);
 
 		return $query;
-	}	
+	}
+
+	function product_remove(){
+		
+		if($this->input->post()){
+			$id = $this->input->post('remove_product_id');
+	    
+			if($id > 0) {
+				$query = $this->db->query("SELECT * FROM product WHERE id=" . $this->db->escape($id))->row();
+				$image_path = $query->product_image_path;
+				
+				if($image_path != "")
+				{
+					unlink($image_path);
+				}
+				$sql = "DELETE FROM product WHERE id = " . $this->db->escape($id) . " LIMIT 1";
+				$rs = $this->db->query($sql);
+				// $this->audit_trail($this->db->last_query(), 'user_m.php', 'customer_remove()', 'Delete User');
+				
+				return $rs;
+			}
+		}
+	}
 	
 	function set_message($status,$mesej)
 	{
