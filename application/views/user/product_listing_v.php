@@ -1,4 +1,9 @@
 	<?php $this->load->view('user/header'); ?>
+	<link href="<?php echo base_url();?>assets/global/plugins/fancybox/source/jquery.fancybox.css" rel="stylesheet" type="text/css" />
+	
+	<!-- this plugin.min.css must be below than fancybox.css so this file repeatitive in this php file because it already been 
+	declare in header.php which are been use by other file-->
+	<link href="<?php echo base_url();?>assets/global/css/plugins.min.css" rel="stylesheet" type="text/css" /> 
 	
 	<script type="text/javascript">
 		function delete_user(user_id) {
@@ -21,7 +26,7 @@
 						<div class="portlet box blue-soft">
 							<div class="portlet-title">
 								<div class="caption">
-									Order Listing
+									Product Listing
 								</div>
 								<!--<div class="tools">
 									<a href="javascript:;" class="collapse"> </a>
@@ -107,73 +112,44 @@
 										<thead>
 											<tr>
 												<th> # </th>
-												<th style="text-align:center" width="10%"> Order Date </th>
-												<th style="text-align:center"> Customer Name </th>
-												<th style="text-align:center" width="10%"> Contact No.</th>
-												<!--<th> Payment Status </th>-->
+												<th style="text-align:center" width="15%">Image </th>
 												<th style="text-align:center"> Product Name </th>
-												<th style="text-align:center"> Quantity</th>
-												<th style="text-align:center" width="10%"> Order Status </th>
-												<th style="text-align:center" width="15%"> Tracking Number </th>
-												<th style="text-align:center" width="10%"> Action </th>
+												<th style="text-align:center" width="12%"> Price </th>
+												<th style="text-align:center"  width="10%"> Commision</th>
+												<th style="text-align:center"> Action</th>
 											</tr>
 										</thead>
 										<tbody>
-									<?php if($cust_query->num_rows() > 0) { 
+									<?php if($product_query->num_rows() > 0) { 
 											$alt = 0;	
 
-											foreach($cust_query->result() as $row) {
+											foreach($product_query->result() as $row) {
 												$alt++;
-												$rowspan = 1;
-												$array_name = array();
-												
-												if(isset($product_query[$row->id]) && $product_query[$row->id]->num_rows() > 0){
-													$rowspan = $product_query[$row->id]->num_rows();
-													foreach ($product_query[$row->id]->result() as $data_row) {
-														array_push($array_name,$product_query["name"][$data_row->product_id]);
-													}					
-												}
-												else{
-													array_push($array_name, "-");
-												}
-												
-												?>
+											?>
 												<tr>
-													<td rowspan="<?php echo $rowspan; ?>"> <?php echo $alt; ?> </td>
-													<td style="text-align:center" rowspan="<?php echo $rowspan; ?>"> <?php echo $row->customer_order_date; ?> </td>
-													<td style="text-align:left" rowspan="<?php echo $rowspan; ?>"> <?php echo $row->customer_name; ?> </td>
-													<td rowspan="<?php echo $rowspan; ?>"> <?php echo $row->customer_contact_no; ?> </td>
-													<!--<td> <?php// echo $row->customer_payment_status; ?> </td>-->
-													<td >
-														<?php echo $array_name[0]; ?>
-													</td>
-													<td style="text-align:center" rowspan="<?php echo $rowspan; ?>"><?php echo $row->customer_total_payment ?></td>
-													<?php $orststus = $row->customer_order_status; ?>
-													<td style="text-align:center" rowspan="<?php echo $rowspan; ?>" > 
-													<?php if($orststus == "Ordered"){ ?>
-														<span class="label label-sm label-success"> <?php echo $orststus; ?> </span>
-													<?php } else if($orststus == "Delivered") {?>
-														<span class="label label-sm label-info"> <?php echo $orststus; ?></span>
-													<?php } else if($orststus == "Received"){ ?>
-														<span class="label label-sm label-info"> <?php echo $orststus; ?> </span>
-													<?php } ?>														
-													</td>
-													<td style="text-align:center" rowspan="<?php echo $rowspan; ?>"> <?php echo $row->customer_tracking_no; ?></td>
-													<td style="text-align:center" rowspan="<?php echo $rowspan; ?>"> <a href="<?php echo site_url()?>user/edit/<?php echo $row->id?>" title="View/Edit" class="btn btn-sm btn-info"> <i class="fa fa-pencil"> </i> </a> <a href="#" onclick="delete_user(<?php echo $row->id?>);" title="Delete Customer" class="btn btn-sm btn-danger"><i class="fa fa-trash"></i></a>   </td>
+													<td> <?php echo $alt; ?> </td>
+													<?php if($row->product_image_path != '') { ?>
+														<td>															
+															<a href="<?php echo base_url() ?>uploads/<?php echo $row->product_image_path; ?>" class="fancybox-button" data-rel="fancybox-button">
+                                                            <img class="img-responsive" src="<?php echo base_url() ?>uploads/<?php echo $row->product_image_path; ?>" alt=""> </a>
+														</td>
+													<?php } else{ ?>
+														<td> 
+                                                            <img class="img-responsive" src="<?php echo base_url() ?>uploads/no_img.png" alt=""> </a> </td>
+													<?php } ?>
+													
+													<td style="text-align:center"> <?php echo $row->product_name; ?> </td>
+													<td style="text-align:left"> <?php echo $row->product_price; ?> </td>
+													<td> <?php echo $row->product_commision; ?> </td>
+													
+													<td style="text-align:center"> <!--<a href="<?php echo site_url()?>user/edit/<?php echo $row->id?>" title="View/Edit" class="btn btn-sm btn-info"> <i class="fa fa-pencil"> </i> </a> <a href="#" onclick="delete_user(<?php echo $row->id?>);" title="Delete Customer" class="btn btn-sm btn-danger"><i class="fa fa-trash"></i></a> -->  </td>
 												</tr>
-												<?php 
-														if($rowspan > 1){
-															foreach($array_name as $k => $v){
-																if($k != 0){
-																	echo "<tr><td>" . $v . "</td></tr>";
-																}
-															}
-														}
-													?>
 											<?php	
 											}
-										}
+										}else {
 										?>
+										<td> No product to be listed </td>
+										<?php }?>
 										</tbody>
 									</table>
 									<?php echo $pagination; ?> 
@@ -189,12 +165,7 @@
 		</div>
 		<!-- END CONTAINER -->
 		<?php $this->load->view('user/footer'); ?>
-		<script>
-		window.setTimeout(function() {
-			$(".notify").fadeTo(500, 0).slideUp(500, function(){
-			$(this).remove(); 
-			});
-		}, 2500);
-		</script>
+		<script src="<?php echo base_url();?>assets/global/plugins/fancybox/source/jquery.fancybox.pack.js" type="text/javascript"></script>
+	
     </body>
 </html>

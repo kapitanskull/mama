@@ -112,7 +112,7 @@ class User extends CI_Controller {
 				$this->load->view('user/add_product_v',$data);
 			}
 			else{
-				
+			
 				redirect('user/product_listing');
 			}
 		}
@@ -123,6 +123,9 @@ class User extends CI_Controller {
 		$data['main_breadcrumb'] = "Product";
 		$data['submain_breadcrumb1'] = "Product Listing";
 		$data['sub_nav_active'] = "product_listing";
+		
+		$data['product_query'] = $this->user_m->product_listing();
+		$data['pagination'] = $this->pagination->create_links();
 		
 		$this->load->view('user/product_listing_v',$data);
 	}
