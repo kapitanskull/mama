@@ -174,8 +174,6 @@ class User_m extends CI_Model
 		
 		$this->pagination->initialize($config);
 
-		
-
 		$sql = '';
 		if($data['total_rows'] > 0) {
 			if($this->uri->segment($config['uri_segment']) && is_numeric($this->uri->segment($config['uri_segment'])))
@@ -250,19 +248,108 @@ class User_m extends CI_Model
 	}
 	
 	function addproduct(){
+		$image_path = "uploads/";
+		$folder_name = $this->session->userdata('userid') . "_" . $this->session->userdata('name');
+		
 		if($this->input->post()){
-			$target_dir = "uploads/";
-			
-			if($_FILES["product_image"]["name"]=='')
-				exit("test1");
-			else if	($_FILES["product_image"]["name"]!='')
-				exit("test2");
+		
 			$product_name = $this->input->post('product_name');
 			$product_price = $this->input->post('product_price');
 			$product_commission = $this->input->post('product_commission');
+			
+			if($product_name == ''){
+				$this->set_message("error", "Please enter product name.");
+				return false;
+			}
+			
+			if($product_price == ''){
+				$this->set_message("error", "Please enter product price.");
+				return false;
+			}
+			if(!is_numeric($product_price)){
+				$this->set_message("error", "Price contain only digits.");
+				return false;
+			}
+			
+			if($product_commission == ''){
+				$this->set_message("error", "Please enter product commision.");
+				return false;
+			}
+			if(!is_numeric($product_commission)){
+				$this->set_message("error", "Commision contain only digits.");
+				return false;
+			}
+			
+			if($_FILES["product_image"]["name"]!=''){
+				
+				if(!is_dir($image_path . $folder_name)){
+					mkdir($image_path . $folder_name,0777,TRUE);
+				}
+				
+				$config['upload_path'] = $image_path . $folder_name;				
+				$config['allowed_types'] = 'png|jpg';
+				$config['max_size'] = '2048'; // 2Mb
+				
+				$this->load->library('upload', $config);
+				
+				if (!$this->upload->do_upload('product_image'))
+				{
+					#case - failure
+					$upload_error = $this->upload->display_errors();
+					$this->set_message("error", $upload_error);
+					return false;
+				}
+				
+				else
+				{
+					#case - success
+					$upload_data = $this->upload->data();
+					$path = $upload_data['file_name'];
+					$DBproduct['product_image_path'] = $folder_name. "/" .$path;
+					
+				}
+			}
+			
+			$DBproduct['product_name'] = $product_name;
+			$DBproduct['product_price'] = number_format($product_price,2);
+			$DBproduct['product_commision'] = number_format($product_commission,2);
+			$DBproduct['product_registrar_id'] = $this->session->userdata('userid');
+  			
+			$rs = $this->db->insert('product', $DBproduct);
+			
+			return $rs;
 		}
-		
 	}
+	
+	function product_listing(){
+		
+		$userid = $this->session->userdata('userid');
+		
+		$query = $this->db->query("SELECT COUNT(id) AS total FROM product WHERE product_registrar_id=" . $this->db->escape($userid))->row();
+		$data['total_rows'] = $query->total;
+		
+		$config['base_url'] = base_url() . 'user/product_listing/';
+		$config['uri_segment'] = 3;
+		$config['total_rows'] = $data['total_rows'];
+		$config['per_page'] = 7;
+		
+		$this->pagination->initialize($config);
+
+		$sql = '';
+		if($data['total_rows'] > 0) {
+			if($this->uri->segment($config['uri_segment']) && is_numeric($this->uri->segment($config['uri_segment'])))
+			{
+				$sql = ' LIMIT ' . $this->uri->segment($config['uri_segment']) . ', ' . $config['per_page'];
+			}
+			else
+			{
+				$sql = ' LIMIT 0, ' . $config['per_page'];
+			}
+		}
+		$query = $this->db->query("SELECT * FROM product ORDER BY id DESC" .  $sql);
+
+		return $query;
+	}	
 	
 	function set_message($status,$mesej)
 	{
