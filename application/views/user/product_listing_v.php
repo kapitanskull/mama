@@ -6,16 +6,16 @@
 	<link href="<?php echo base_url();?>assets/global/css/plugins.min.css" rel="stylesheet" type="text/css" /> 
 	
 	<script type="text/javascript">
-		function delete_user(user_id) {
-			if(confirm("Are you sure to delete this user?")) {
-				$('#remove_user_id').val(user_id);
+		function delete_product(product_id) {
+			if(confirm("Are you sure to delete this product?")) {
+				$('#remove_product_id').val(product_id);
 				$('#remove_frm').submit();	
 			}
 		}
 	</script>			
 				<!-- BEGIN PAGE TITLE-->
-				<form id="remove_frm" name="remove_frm" action="<?php echo site_url()?>/user/customer_remove/" method="post">
-					<input type="hidden" name="remove_user_id" id="remove_user_id" value="" />
+				<form id="remove_frm" name="remove_frm_product" action="<?php echo site_url()?>/user/product_remove/" method="post">
+					<input type="hidden" name="remove_product_id" id="remove_product_id" value="" />
 				</form>
 				<!-- END PAGE TITLE-->
 				<!-- END PAGE HEADER-->
@@ -111,12 +111,12 @@
 									<table class="table table-striped table-bordered table-hover table-header-fixed">
 										<thead>
 											<tr>
-												<th> # </th>
+												<th width="4%"> # </th>
 												<th style="text-align:center" width="15%">Image </th>
-												<th style="text-align:center"> Product Name </th>
-												<th style="text-align:center" width="12%"> Price </th>
-												<th style="text-align:center"  width="10%"> Commision</th>
-												<th style="text-align:center"> Action</th>
+												<th> Product Name </th>
+												<th> Price </th>
+												<th> Commision</th>
+												<th style="text-align:center" width="10%"> Action</th>
 											</tr>
 										</thead>
 										<tbody>
@@ -131,24 +131,24 @@
 													<?php if($row->product_image_path != '') { ?>
 														<td>															
 															<a href="<?php echo base_url() ?>uploads/<?php echo $row->product_image_path; ?>" class="fancybox-button" data-rel="fancybox-button">
-                                                            <img class="img-responsive" src="<?php echo base_url() ?>uploads/<?php echo $row->product_image_path; ?>" alt=""> </a>
+                                                            <img class="img-responsive" src="<?php echo base_url() ?><?php echo $row->product_image_path; ?>" alt=""> </a>
 														</td>
 													<?php } else{ ?>
 														<td> 
                                                             <img class="img-responsive" src="<?php echo base_url() ?>uploads/no_img.png" alt=""> </a> </td>
 													<?php } ?>
 													
-													<td style="text-align:center"> <?php echo $row->product_name; ?> </td>
-													<td style="text-align:left"> <?php echo $row->product_price; ?> </td>
+													<td> <?php echo $row->product_name; ?> </td>
+													<td> <?php echo $row->product_price; ?> </td>
 													<td> <?php echo $row->product_commision; ?> </td>
 													
-													<td style="text-align:center"> <!--<a href="<?php echo site_url()?>user/edit/<?php echo $row->id?>" title="View/Edit" class="btn btn-sm btn-info"> <i class="fa fa-pencil"> </i> </a> <a href="#" onclick="delete_user(<?php echo $row->id?>);" title="Delete Customer" class="btn btn-sm btn-danger"><i class="fa fa-trash"></i></a> -->  </td>
+													<td style="text-align:center"> <!--<a href="<?php echo site_url()?>user/edit/<?php echo $row->id?>" title="View/Edit" class="btn btn-icon-only blue"> <i class="fa fa-pencil"> </i> </a>--> <a href="#" onclick="delete_product(<?php echo $row->id?>);" title="Delete Product" class="btn btn-icon-only red"><i class="fa fa-trash"></i></a></td>
 												</tr>
 											<?php	
 											}
 										}else {
 										?>
-										<td> No product to be listed </td>
+										<td colspan="6" style="text-align:center"> No product to be listed </td>
 										<?php }?>
 										</tbody>
 									</table>
