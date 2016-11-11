@@ -129,5 +129,16 @@ class User extends CI_Controller {
 		
 		$this->load->view('user/product_listing_v',$data);
 	}
+	
+	public function product_remove(){
+		
+		$rs = $this->user_m->product_remove();
+		if($rs === false) 
+			$this->session->set_flashdata("error","Delete failed. Data has not changed");
+		else 
+			$this->session->set_flashdata("success","Product has been deleted.");
+		
+		redirect('user/product_listing/');
+	}
 
 }//end of login controller
