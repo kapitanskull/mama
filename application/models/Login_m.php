@@ -18,8 +18,7 @@ class Login_m extends CI_Model
 			'contact_num' => trim($this->input->post('contact_num')),
 			'username' =>trim($this->input->post('username')),
 		);
-		//rpassword
-		
+	
 		if($DBdata['name'] == '') {
 		  $this->set_message("error", "Please enter your name.");
 		  return false;
