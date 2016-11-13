@@ -45,7 +45,6 @@ class User extends CI_Controller {
 				$this->load->view('user/add_customer_v',$data);
 			}
 			else{
-				echo"berjaya";
 				redirect('user/listing');
 			}
 		}
@@ -75,7 +74,7 @@ class User extends CI_Controller {
 		$data['current_process'] = "edit";
 		$data['main_breadcrumb'] = "Order";
 		$data['submain_breadcrumb1'] = "Customer Update";
-		$this->load->view('user/add_customer_v',$data);
+		$this->load->view('user/edit_product_v',$data);
 		
 	}
 	
@@ -96,49 +95,6 @@ class User extends CI_Controller {
 			echo $data;
 		}
 		
-	}
-	
-	public function add_product(){
-		$data['main_breadcrumb'] = "Product";
-		$data['submain_breadcrumb1'] = "Add Product";
-		$data['sub_nav_active'] = "add_product";
-		
-		if($this->input->post()){
-			$rc = $this->user_m->addproduct();
-			
-			if($rc == false){
-				$data['post'] = $this->input->post();
-				
-				$this->load->view('user/add_product_v',$data);
-			}
-			else{
-			
-				redirect('user/product_listing');
-			}
-		}
-		$this->load->view('user/add_product_v',$data);
-	}
-	
-	public function product_listing(){
-		$data['main_breadcrumb'] = "Product";
-		$data['submain_breadcrumb1'] = "Product Listing";
-		$data['sub_nav_active'] = "product_listing";
-		
-		$data['product_query'] = $this->user_m->product_listing();
-		$data['pagination'] = $this->pagination->create_links();
-		
-		$this->load->view('user/product_listing_v',$data);
-	}
-	
-	public function product_remove(){
-		
-		$rs = $this->user_m->product_remove();
-		if($rs === false) 
-			$this->session->set_flashdata("error","Delete failed. Data has not changed");
-		else 
-			$this->session->set_flashdata("success","Product has been deleted.");
-		
-		redirect('user/product_listing/');
 	}
 
 }//end of login controller
