@@ -97,26 +97,36 @@
 															</div>
 														</div>
 													</div>
-													<div class="col-md-6 available_color">
-														<?php if(isset($post['colour_name']) && count($post['colour_name']) > 0){
-																$total = count($post['colour_name']);
-															}
-															else{
-																$total = 1;
-															} 
-															for($i = 0 ; $i < $total; $i++ ){
-															?>
-																<div class="form-group product_color">
-																	<label class="control-label col-md-4 label_color">Available Color</label>
-																	<div class="col-md-4 ">
-																		<input type="text" class="form-control"  placeholder="" name="colour_name[]" 
-																		value="<?php echo isset($post['colour_name'][$i]) ? $post['colour_name'][$i] : ''; ?>">
+													<div class="col-md-6">
+														<div class="available_color">
+															<?php if(isset($post['colour_name']) && count($post['colour_name']) > 0){
+																	$total = count($post['colour_name']);
+																}
+																else{
+																	$total = 1;
+																} 
+																for($i = 0 ; $i < $total; $i++ ){
+																?>
+																	<div class="form-group product_color">
+																		<label class="control-label col-md-4 label_color">Available Color</label>
+																		<div class="col-md-4 ">
+																			<input type="text" class="form-control"  placeholder="" name="colour_name[]" 
+																			value="<?php echo isset($post['colour_name'][$i]) ? $post['colour_name'][$i] : ''; ?>">
+																		</div>
+																		<a class="btn btn-danger button_remove_rowcolor"><span class="fa fa-times"></span></a>
 																	</div>
-																	<a class="btn btn-info button_add_product_color"><span class="fa fa-plus"></span></a>
-																</div>
-														<?php
-															}
-															?>
+															<?php
+																}
+																?>
+														</div>
+														<div class="form-group">
+															<div class="col-md-4 ">
+																
+															</div>
+															<div class="col-md-4 ">
+																<a class="btn btn-info button_add_product_color form-control"> <span class="fa fa-plus"></span> </a>
+															</div>
+														</div>
 													</div>
 												</div>
 												
@@ -148,54 +158,55 @@
                 <!-- END CONTENT -->
             </div>
             <!-- END CONTAINER -->
-			<?php $this->load->view('user/footer'); ?>
-			<!-- BEGIN PAGE LEVEL SCRIPTS -->
-			<script src="<?php echo base_url();?>assets/pages/scripts/form-samples.min.js" type="text/javascript"></script>
-			<script src="<?php echo base_url();?>assets/global/plugins/bootstrap-fileinput/bootstrap-fileinput.js" type="text/javascript"></script>
-			<!-- END PAGE LEVEL SCRIPTS -->
-			<!-- BEGIN PAGE LEVEL PLUGIN -->
-			
-			<script src="<?php echo base_url();?>assets/global/plugins/moment.min.js" type="text/javascript"></script>
-			
-			<!-- END PAGE LEVEL PLUGIN -->
-			<script>
-			function test2(){
-				 total_row = $('.product_color').length;
-				 if(total_row > 0 ){
-					 for(i = 1; i <total_row; i++){
-						rowcolor = $('.product_color')[i];
-						// rowcolor.find('.label_color').html("");
-						// rowcolor.find('.button_add_product_color').addClass('btn-danger button_remove_rowcolor').removeClass('btn-info').removeClass('button_add_product_color');
-						// rowcolor.find('.fa-plus').addClass('fa-times').removeClass('fa-plus');
-						console.log(rowcolor);
-					 }
+		<?php $this->load->view('user/footer'); ?>
+		<!-- BEGIN PAGE LEVEL SCRIPTS -->
+		<script src="<?php echo base_url();?>assets/pages/scripts/form-samples.min.js" type="text/javascript"></script>
+		<script src="<?php echo base_url();?>assets/global/plugins/bootstrap-fileinput/bootstrap-fileinput.js" type="text/javascript"></script>
+		<!-- END PAGE LEVEL SCRIPTS -->
+		<!-- BEGIN PAGE LEVEL PLUGIN -->
+		
+		<script src="<?php echo base_url();?>assets/global/plugins/moment.min.js" type="text/javascript"></script>
+		
+		<!-- END PAGE LEVEL PLUGIN -->
+		<script>
+		function test2(){
+			 total_row = $('.product_color').length;
+			 if(total_row > 0 ){
+				 for(i = 1; i <total_row; i++){
+					rowcolor = $($('.product_color')[i]);
+					rowcolor.find('.label_color').html("");
+					// rowcolor.find('.button_add_product_color').addClass('btn-danger button_remove_rowcolor').removeClass('btn-info').removeClass('button_add_product_color');
+					// rowcolor.find('.fa-plus').addClass('fa-times').removeClass('fa-plus');
+					console.log(rowcolor);
 				 }
-				
-			}
-			$(function()
-			{ 
+			 }
+			
+		}
+		
+		$(function()
+		{
 			test2();
-				$('.button_add_product_color').on('click', function(){
-						
-					var newOrderRow = $($('.product_color')[0]).clone();
-					newOrderRow.find('input[name="product_color[]"]').val("");
-					newOrderRow.find('.label_color').html("");
-					newOrderRow.find('.button_add_product_color').addClass('btn-danger button_remove_rowcolor').removeClass('btn-info').removeClass('button_add_product_color');
-					newOrderRow.find('.fa-plus').addClass('fa-times').removeClass('fa-plus');
+			$('.button_add_product_color').on('click', function(){
 					
-					$('.available_color').append(newOrderRow);
+				var newOrderRow = $($('.product_color')[0]).clone();
+				newOrderRow.find('input[name="product_color[]"]').val("");
+				newOrderRow.find('.label_color').html("");
+				newOrderRow.find('.button_add_product_color').addClass('btn-danger button_remove_rowcolor').removeClass('btn-info').removeClass('button_add_product_color');
+				newOrderRow.find('.fa-plus').addClass('fa-times').removeClass('fa-plus');
 				
-				});
-				
-				$('.available_color').on("click", ".button_remove_rowcolor", function(){
-					$(this).closest('.product_color').remove();
-				});
+				$('.available_color').append(newOrderRow);
 			});
-			window.setTimeout(function() {
-				$(".notify").fadeTo(500, 0).slideUp(500, function(){
-				$(this).remove(); 
-				});
-			}, 2500);
-			</script>
+			
+			$('.available_color').on("click", ".button_remove_rowcolor", function(){
+				$(this).closest('.product_color').remove();
+			});
+		});
+		
+		window.setTimeout(function() {
+			$(".notify").fadeTo(500, 0).slideUp(500, function(){
+			$(this).remove(); 
+			});
+		}, 2500);
+		</script>
     </body>
 </html>
