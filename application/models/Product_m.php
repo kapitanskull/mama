@@ -152,6 +152,31 @@ class Product_m extends CI_Model
 
 		return $query;
 	}
+	
+	function product_color($data = false){
+		$all_data = array();
+		$i = 1;
+		if($data != false){
+			if($data->num_rows() > 0){
+				foreach ($data->result() as $row){
+					$sql = "SELECT * FROM `product_color_management` WHERE `product_id` = " . $this->db->escape($row->id) . "AND `registrar_id` = " . $this->db->escape($this->session->userdata('userid'));
+					$query = $this->db->query($sql);
+					// $all_data[$row->id] = $query;
+					if($query->num_rows() > 0)
+					foreach($query->result() as $row2)
+					{
+						$all_data["colour"][$row2->product_id][] = $row2->colour_name;
+					}
+				}
+			}
+		}
+		if(count($all_data) > 0){
+			return $all_data;
+		}
+		else{
+			return false;
+		}	
+	}
 
 	function product_remove(){
 		$userid = $this->session->userdata('userid');

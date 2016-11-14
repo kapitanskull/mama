@@ -26,8 +26,13 @@ class Product extends CI_Controller {
 		$data['sub_nav_active'] = "product_listing";
 		
 		$data['product_query'] = $this->product_m->product_listing();
+		$data['color_query'] = $this->product_m->product_color($data['product_query']);
 		$data['pagination'] = $this->pagination->create_links();
 		
+		// echo "<pre>"; 
+		// print_r($data); 
+		// echo "</pre>";
+		// exit;
 		$this->load->view('product/product_listing_v',$data);
 	}
 	

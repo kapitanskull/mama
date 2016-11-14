@@ -113,10 +113,9 @@
 											<tr>
 												<th width="4%"> # </th>
 												<th style="text-align:center" width="15%">Image </th>
-												<th style="text-align:center"> Product Name </th>
-												<th width="12%" style="text-align:center"> Available Colour</th>
-												<th style="text-align:center"> Price </th>
-												<th style="text-align:center"> Commision</th>
+												<th> Product Name </th>
+												<th> Price </th>
+												<th> Commision</th>
 												<th style="text-align:center" width="10%"> Action</th>
 											</tr>
 										</thead>
@@ -126,19 +125,6 @@
 
 											foreach($product_query->result() as $row) {
 												$alt++;
-												$rowspan = 1;
-												$array_color = array();
-												if(isset($color_query["colour"][$row->id]) && $color_query["colour"][$row->id]->num_rows() > 0){
-													
-													echo "test";// $rowspan = $color_query[$row->id]->num_rows();
-													// foreach ($color_query[$row->id]->result() as $data_row) {
-														// array_push($array_color,$color_query["colour"][$data_row->product_id]);
-													// }					
-												}
-												else{
-													array_push($array_color, "-");
-												}
-												
 											?>
 												<tr>
 													<td> <?php echo $alt; ?> </td>
@@ -153,7 +139,6 @@
 													<?php } ?>
 													
 													<td> <?php echo $row->product_name; ?> </td>
-													<td> test</td>
 													<td> <?php echo $row->product_price; ?> </td>
 													<td> <?php echo $row->product_commission; ?> </td>
 													
@@ -161,7 +146,6 @@
 												</tr>
 											<?php	
 											}
-											
 										}else {
 										?>
 										<td colspan="6" style="text-align:center"> No product to be listed </td>
