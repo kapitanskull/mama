@@ -175,14 +175,25 @@
 															<tr align="left">
 															<th  width="2%">#</th>
 															<th width="20%">Product Name</th>
-															<th width="15%">Product Price </th>
-															<th width="15%">Order Quantity </th>
+															<th>Price </th>
+															<th width="8%">Size</th>
+															<th width="15%">Colour </th>
+															<th width="10%">Quantity </th>
 															<th class="control-label" width="5%">
 																<a class="btn btn-info button_add_order_product"><span class="fa fa-plus"></span></a>
 															</th>
 															</tr>
 														</thead>
 														<tbody class="add-order">
+														<?php
+															if(isset($post['customer_order_product_id']) && count($post['customer_order_product_id']) > 0){
+																$total = count($post['customer_order_product_id']);
+															}
+															else{
+																$total = 1;
+															}
+															for($i = 0 ; $i < $total; $i++ ){
+														?>
 															<tr class="product-order">
 																<td class="product_numbering">1. </td>
 																<td class="form-group">
@@ -195,14 +206,32 @@
 																				} ?>
 																	</select>
 																</td>
-																<td class="form-group product_price">
-																	<input type="text" class="form-control product_price"  name="product_price[]" value="" readonly style="max-width:50%;" required>
+																<td class="form-group product_price col-md-2">
+																	<input type="text" class="form-control product_price"  name="product_price[]" 
+																	value="<?php echo isset($post['product_price'][$i]) ? $post['product_price'][$i] : ''; ?>" readonly required>
 																</td>
-																<td><input type="text" class="form-control product_quantity"  name="product_quantity[]" value="1" style="max-width:50%;" required></td>
+																<td class="form-group product_size">
+																	<select class="form-control" name="customer_country" >
+																		<option value=""></option>
+																		<option value="xs" >XS</option>
+																		<option value="s" >S</option>
+																		<option value="m" >M</option>
+																		<option value="l" >L</option>
+																		<option value="xl" >XL</option>
+																	</select>
+																</td>
+																<td class="form-group product_price">
+																	
+																</td>
+																<td><input type="text" class="form-control product_quantity"  name="product_quantity[]" 
+																value="<?php echo isset($post['product_quantity'][$i]) ? $post['product_quantity'][$i] : '1';?>" style="max-width:50%;" required></td>
 																<td class="control-label">
 																	<a class="btn btn-danger button_remove_rowOrder"><span class="fa fa-times"></span></a>
 																</td>
 															</tr>
+															<?php
+																}
+															?>
 														</tbody> 
 													</table>
 												</div>

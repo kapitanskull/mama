@@ -190,12 +190,12 @@
                                 </a>
                                 <ul class="sub-menu">
                                     <li class="nav-item <?php if(isset($sub_nav_active) && $sub_nav_active == "product_listing") echo $nav_active;  ?>">
-                                        <a href="<?php echo base_url(); ?>user/product_listing" class="nav-link ">
+                                        <a href="<?php echo base_url(); ?>product/product_listing" class="nav-link ">
                                             <span class="title">Product List</span>
                                         </a>
                                     </li>
 									  <li class="nav-item <?php if(isset($sub_nav_active) && $sub_nav_active == "add_product") echo $nav_active;  ?> ">
-                                        <a href="<?php echo base_url(); ?>user/add_product" class="nav-link ">
+                                        <a href="<?php echo base_url(); ?>product/add_product" class="nav-link ">
                                             <span class="title">Add Product</span>
                                         </a>
                                     </li>
