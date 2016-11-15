@@ -128,38 +128,45 @@
 												$alt++;
 												$rowspan = 1;
 												$array_color = array();
-												if(isset($color_query["colour"][$row->id]) && $color_query["colour"][$row->id]->num_rows() > 0){
-													
-													echo "test";// $rowspan = $color_query[$row->id]->num_rows();
-													// foreach ($color_query[$row->id]->result() as $data_row) {
-														// array_push($array_color,$color_query["colour"][$data_row->product_id]);
-													// }					
+												if(isset($color_query[$row->id]) && $color_query[$row->id]->num_rows() > 0){
+													$rowspan = $color_query[$row->id]->num_rows();
+													foreach($color_query[$row->id]->result() as $color) {
+														array_push($array_color,$color->colour_name); 
+													}					
 												}
 												else{
 													array_push($array_color, "-");
 												}
 												
+												
 											?>
 												<tr>
-													<td> <?php echo $alt; ?> </td>
+													<td rowspan="<?php echo $rowspan; ?>"> <?php echo $alt; ?> </td>
 													<?php if($row->product_image_path != '') { ?>
-														<td>															
+														<td rowspan="<?php echo $rowspan; ?>">															
 															<a href="<?php echo base_url() . $row->product_image_path; ?>" class="fancybox-button" data-rel="fancybox-button">
                                                             <img class="img-responsive" src="<?php echo base_url() . $row->product_image_path; ?>" alt=""> </a>
 														</td>
 													<?php } else{ ?>
-														<td> 
+														<td rowspan="<?php echo $rowspan; ?>"> 
                                                             <img class="img-responsive" src="<?php echo base_url() ?>uploads/no_img.png" alt=""> </a> </td>
 													<?php } ?>
 													
-													<td> <?php echo $row->product_name; ?> </td>
-													<td> test</td>
-													<td> <?php echo $row->product_price; ?> </td>
-													<td> <?php echo $row->product_commission; ?> </td>
+													<td rowspan="<?php echo $rowspan; ?>"> <?php echo $row->product_name; ?> </td>
+													<td> <?php echo $array_color[0]; ?></td>
+													<td rowspan="<?php echo $rowspan; ?>"> <?php echo $row->product_price; ?> </td>
+													<td rowspan="<?php echo $rowspan; ?>"> <?php echo $row->product_commission; ?> </td>
 													
-													<td style="text-align:center"> <a href="<?php echo site_url()?>product/edit/<?php echo $row->id?>" title="View/Edit" class="btn btn-icon-only blue"> <i class="fa fa-pencil"> </i> </a><a href="#" onclick="delete_product(<?php echo $row->id?>);" title="Delete Product" class="btn btn-icon-only red"><i class="fa fa-trash"></i></a></td>
+													<td rowspan="<?php echo $rowspan; ?>" style="text-align:center"> <a href="<?php echo site_url()?>product/edit/<?php echo $row->id?>" title="View/Edit" class="btn btn-icon-only blue"> <i class="fa fa-pencil"> </i> </a><a href="#" onclick="delete_product(<?php echo $row->id?>);" title="Delete Product" class="btn btn-icon-only red"><i class="fa fa-trash"></i></a></td>
 												</tr>
 											<?php	
+												if($rowspan > 1){
+													foreach($array_color as $k => $v){
+														if($k > 0){
+															echo "<tr><td>" . $v . "</td></tr>";
+														}
+													}
+												}
 											}
 											
 										}else {
