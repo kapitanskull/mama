@@ -146,6 +146,7 @@ class User_m extends CI_Model
 			
 			if($otr == true){
 				$this->db->query("UPDATE table_running_number SET running_number = running_number+1 WHERE id=2"); 
+				$this->session->set_flashdata("success","Register customer successful.");
 				return true;
 			}
 		}
@@ -185,7 +186,7 @@ class User_m extends CI_Model
 				$sql = ' LIMIT 0, ' . $config['per_page'];
 			}
 		}
-		$query = $this->db->query("SELECT * FROM customer ORDER BY id DESC" .  $sql);
+		$query = $this->db->query("SELECT * FROM customer WHERE customer_registrar_userid =" . $this->db->escape($userid) . "ORDER BY id DESC" .  $sql);
 
 		return $query;
 	}
@@ -245,132 +246,6 @@ class User_m extends CI_Model
 			return $row->product_price;
 		}
 		
-	}
-	
-	function addproduct(){
-		$image_path = "uploads/";
-		$folder_name = $this->session->userdata('userid') . "_" . $this->session->userdata('name');
-		
-		if($this->input->post()){
-		
-			$product_name = $this->input->post('product_name');
-			$product_price = $this->input->post('product_price');
-			$product_commission = $this->input->post('product_commission');
-			
-			if($product_name == ''){
-				$this->set_message("error", "Please enter product name.");
-				return false;
-			}
-			
-			if($product_price == ''){
-				$this->set_message("error", "Please enter product price.");
-				return false;
-			}
-			if(!is_numeric($product_price)){
-				$this->set_message("error", "Price contain only digits.");
-				return false;
-			}
-			
-			if($product_commission == ''){
-				$this->set_message("error", "Please enter product commision.");
-				return false;
-			}
-			if(!is_numeric($product_commission)){
-				$this->set_message("error", "Commision contain only digits.");
-				return false;
-			}
-			
-			if($_FILES["product_image"]["name"]!=''){
-				
-				if(!is_dir($image_path . $folder_name)){
-					mkdir($image_path . $folder_name,0777,TRUE);
-				}
-				
-				$config['upload_path'] = $image_path . $folder_name;				
-				$config['allowed_types'] = 'png|jpg';
-				$config['max_size'] = '2048'; // 2Mb
-				
-				$this->load->library('upload', $config);
-				
-				if (!$this->upload->do_upload('product_image'))
-				{
-					#case - failure
-					$upload_error = $this->upload->display_errors();
-					$this->set_message("error", $upload_error);
-					return false;
-				}
-				
-				else
-				{
-					#case - success
-					$upload_data = $this->upload->data();
-					$path = $upload_data['file_name'];
-					$DBproduct['product_image_path'] = $image_path . $folder_name . "/" . $path;
-					
-				}
-			}
-			
-			$DBproduct['product_name'] = $product_name;
-			$DBproduct['product_price'] = number_format($product_price,2);
-			$DBproduct['product_commision'] = number_format($product_commission,2);
-			$DBproduct['product_registrar_id'] = $this->session->userdata('userid');
-  			
-			$rs = $this->db->insert('product', $DBproduct);
-			
-			return $rs;
-		}
-	}
-	
-	function product_listing(){
-		
-		$userid = $this->session->userdata('userid');
-		
-		$query = $this->db->query("SELECT COUNT(id) AS total FROM product WHERE product_registrar_id=" . $this->db->escape($userid))->row();
-		$data['total_rows'] = $query->total;
-		
-		$config['base_url'] = base_url() . 'user/product_listing/';
-		$config['uri_segment'] = 3;
-		$config['total_rows'] = $data['total_rows'];
-		$config['per_page'] = 7;
-		
-		$this->pagination->initialize($config);
-
-		$sql = '';
-		if($data['total_rows'] > 0) {
-			if($this->uri->segment($config['uri_segment']) && is_numeric($this->uri->segment($config['uri_segment'])))
-			{
-				$sql = ' LIMIT ' . $this->uri->segment($config['uri_segment']) . ', ' . $config['per_page'];
-			}
-			else
-			{
-				$sql = ' LIMIT 0, ' . $config['per_page'];
-			}
-		}
-		$query = $this->db->query("SELECT * FROM product WHERE product_registrar_id=" . $this->db->escape($userid) . "ORDER BY id DESC" .  $sql);
-
-		return $query;
-	}
-
-	function product_remove(){
-		
-		if($this->input->post()){
-			$id = $this->input->post('remove_product_id');
-	    
-			if($id > 0) {
-				$query = $this->db->query("SELECT * FROM product WHERE id=" . $this->db->escape($id))->row();
-				$image_path = $query->product_image_path;
-				
-				if($image_path != "")
-				{
-					unlink($image_path);
-				}
-				$sql = "DELETE FROM product WHERE id = " . $this->db->escape($id) . " LIMIT 1";
-				$rs = $this->db->query($sql);
-				// $this->audit_trail($this->db->last_query(), 'user_m.php', 'customer_remove()', 'Delete User');
-				
-				return $rs;
-			}
-		}
 	}
 	
 	function set_message($status,$mesej)

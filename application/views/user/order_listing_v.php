@@ -126,15 +126,18 @@
 												$alt++;
 												$rowspan = 1;
 												$array_name = array();
+												$array_quantity = array();
 												
 												if(isset($product_query[$row->id]) && $product_query[$row->id]->num_rows() > 0){
 													$rowspan = $product_query[$row->id]->num_rows();
 													foreach ($product_query[$row->id]->result() as $data_row) {
+														array_push($array_quantity,$data_row->order_quantity);
 														array_push($array_name,$product_query["name"][$data_row->product_id]);
 													}					
 												}
 												else{
 													array_push($array_name, "-");
+													array_push($array_quantity, "-");
 												}
 												
 												?>
@@ -153,9 +156,11 @@
 													<td >
 														<?php echo $array_name[0]; ?>
 													</td>
-													<td style="text-align:center" rowspan="<?php echo $rowspan; ?>"><?php echo $row->customer_total_payment ?></td>
-													<?php $orststus = $row->customer_order_status; ?>
+													<td >
+														<?php echo $array_quantity[0]; ?>
+													</td>
 													<td style="text-align:center" rowspan="<?php echo $rowspan; ?>" > 
+													<?php $orststus = $row->customer_order_status; ?>
 													<?php if($orststus == "Ordered"){ ?>
 														<span class="label label-sm label-success"> <?php echo $orststus; ?> </span>
 													<?php } else if($orststus == "Delivered") {?>
@@ -171,7 +176,8 @@
 														if($rowspan > 1){
 															foreach($array_name as $k => $v){
 																if($k != 0){
-																	echo "<tr><td>" . $v . "</td></tr>";
+																	echo "<tr><td>" . $v . "</td>";
+																	echo "<td>" .$array_quantity[$k] . "</td></tr>";
 																}
 															}
 														}
