@@ -36,8 +36,8 @@
 														<div class="form-group">
 															<label class="control-label col-md-2">Product Name <font style="color:red;">*</font></label>
 															<div class="col-md-8">
-																<input type="hidden" class="form-control" name="product_id" value="<?php echo (isset($post['id']) ? $post['id'] : "") ?>">
-																<input type="text" class="form-control" placeholder="Product name" name="product_name" value="<?php echo (isset($post['product_name']) ? $post['product_name'] : "") ?>">
+																<input type="hidden" class="form-control" name="product_id" value="<?php echo (isset($id) ? $id : "") ?>">
+																<input type="text" class="form-control" placeholder="Product name" name="product_name" value="<?php echo (isset($product_name) ? $product_name : "") ?>">
 																<!--<span class="help-block"> This is inline help </span>-->
 															</div>
 														</div>
@@ -57,7 +57,7 @@
 														<div class="form-group">
 															<label class="control-label col-md-4">Product price (RM)<font style="color:red;">*</font></label>
 															<div class="col-md-4">
-																 <input type="text" class="form-control" placeholder="Eg: 40.00" name="product_price" value="<?php echo (isset($post['product_price']) ? $post['product_price'] : "") ?>">
+																 <input type="text" class="form-control" placeholder="Eg: 40.00" name="product_price" value="<?php echo (isset($product_price) ? $product_price : "") ?>">
 															</div>
 														</div>
 													</div>
@@ -65,7 +65,7 @@
 														<div class="form-group">
 															<label class="control-label col-md-4">Commission (RM)<font style="color:red;">*</font></label>
 															<div class="col-md-4">
-																<input type="text" class="form-control"  placeholder="Eg: 20.00" name="product_commission" value="<?php echo (isset($post['product_commission']) ? $post['product_commission'] : "") ?>">
+																<input type="text" class="form-control"  placeholder="Eg: 20.00" name="product_commission" value="<?php echo (isset($product_commission) ? $product_commission : "") ?>">
 																<!--<span class="help-block"> This is inline help </span>-->
 															</div>
 														</div>
@@ -80,8 +80,8 @@
 															<div class="col-md-4">
 																<div class="fileinput fileinput-new" data-provides="fileinput">
 																	<div class="fileinput-preview thumbnail" data-trigger="fileinput" style="width: 200px; height: 150px;">
-																			<?php if( isset($post['product_image_path']) && $post['product_image_path'] != ''){ ?>
-																				<img src="<?php echo base_url().$post['product_image_path']?>" alt="">
+																			<?php if( isset($product_image_path) && $product_image_path != ''){ ?>
+																				<img src="<?php echo base_url().$product_image_path?>" alt="">
 																			<?php } else { ?>
 																				 <img src="" alt="">
 																			<?php }?>
@@ -99,25 +99,40 @@
 													</div>
 													<div class="col-md-6">
 														<div class="available_color">
-															<?php if(isset($post['colour_name']) && count($post['colour_name']) > 0){
-																	$total = count($post['colour_name']);
+															<?php 
+																if(isset($color_query) && $color_query->num_rows() > 0){
+																	foreach($color_query->result() as $row) { ?>
+																		<div class="form-group product_color">
+																			<label class="control-label col-md-4 label_color">Available Color</label>
+																			<div class="col-md-4 ">
+																				<input type="text" class="form-control"  placeholder="" name="colour_name[]" 
+																				value="<?php echo $row->colour_name ?>">
+																			</div>
+																			<a class="btn btn-danger button_remove_rowcolor"><span class="fa fa-times"></span></a>
+																		</div>
+															<?php		}
 																}
 																else{
-																	$total = 1;
-																} 
-																for($i = 0 ; $i < $total; $i++ ){
-																?>
-																	<div class="form-group product_color">
-																		<label class="control-label col-md-4 label_color">Available Color</label>
-																		<div class="col-md-4 ">
-																			<input type="text" class="form-control"  placeholder="" name="colour_name[]" 
-																			value="<?php echo isset($post['colour_name'][$i]) ? $post['colour_name'][$i] : ''; ?>">
+																	if(isset($colour_name) && count($colour_name) > 0){
+																		$total = count($colour_name);
+																	}
+																	else{
+																		$total = 1;
+																	} 
+																	for($i = 0 ; $i < $total; $i++ ){
+																	?>
+																		<div class="form-group product_color">
+																			<label class="control-label col-md-4 label_color">Available Color</label>
+																			<div class="col-md-4 ">
+																				<input type="text" class="form-control"  placeholder="" name="colour_name[]" 
+																				value="<?php echo isset($colour_name[$i]) ? $colour_name[$i] : ''; ?>">
+																			</div>
+																			<a class="btn btn-danger button_remove_rowcolor"><span class="fa fa-times"></span></a>
 																		</div>
-																		<a class="btn btn-danger button_remove_rowcolor"><span class="fa fa-times"></span></a>
-																	</div>
-															<?php
-																}
-																?>
+														<?php
+																	} 
+																}?>
+															
 														</div>
 														<div class="form-group">
 															<div class="col-md-4 ">
