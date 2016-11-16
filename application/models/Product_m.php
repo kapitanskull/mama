@@ -120,7 +120,7 @@ class Product_m extends CI_Model
 			}
 		
 			$this->session->set_flashdata("success","Register product successful.");
-			return $roc;
+			return $last_insert_id;
 		}
 	}
 	
@@ -151,6 +151,26 @@ class Product_m extends CI_Model
 		$query = $this->db->query("SELECT * FROM product WHERE product_registrar_id=" . $this->db->escape($userid) . "ORDER BY id DESC" .  $sql);
 
 		return $query;
+	}
+	
+	function product_color($data = false){
+		$all_data = array();
+		$i = 1;
+		if($data != false){
+			if($data->num_rows() > 0){
+				foreach ($data->result() as $row){
+					$sql = "SELECT * FROM `product_color_management` WHERE `product_id` = " . $this->db->escape($row->id) . " AND `registrar_id` = " . $this->db->escape($this->session->userdata('userid'));
+					$query = $this->db->query($sql);
+					$all_data[$row->id] = $query;
+				}
+			}
+		}
+		if(count($all_data) > 0){
+			return $all_data;
+		}
+		else{
+			return false;
+		}	
 	}
 
 	function product_remove(){
@@ -184,6 +204,18 @@ class Product_m extends CI_Model
 			
 			if($query->num_rows() > 0){
 				return $query->row_array();
+			}
+		}
+	}
+	
+	function get_color($id = 0){
+		$userid = $this->session->userdata('userid');
+		
+		if($id > 0){
+			$query = $this->db->query("SELECT * FROM product_color_management WHERE product_id=" . $this->db->escape($id) . "AND registrar_id=" . $this->db->escape($userid));
+			
+			if($query->num_rows() > 0){
+				return $query;
 			}
 		}
 	}

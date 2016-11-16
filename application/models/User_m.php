@@ -186,7 +186,7 @@ class User_m extends CI_Model
 				$sql = ' LIMIT 0, ' . $config['per_page'];
 			}
 		}
-		$query = $this->db->query("SELECT * FROM customer ORDER BY id DESC" .  $sql);
+		$query = $this->db->query("SELECT * FROM customer WHERE customer_registrar_userid =" . $this->db->escape($userid) . "ORDER BY id DESC" .  $sql);
 
 		return $query;
 	}

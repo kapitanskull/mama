@@ -26,32 +26,46 @@ class Product extends CI_Controller {
 		$data['sub_nav_active'] = "product_listing";
 		
 		$data['product_query'] = $this->product_m->product_listing();
+		$data['color_query'] = $this->product_m->product_color($data['product_query']);
 		$data['pagination'] = $this->pagination->create_links();
 		
+		// echo "<pre>"; 
+		// print_r($data); 
+		// echo "</pre>";
+		// exit;
 		$this->load->view('product/product_listing_v',$data);
 	}
 	
-	public function add_product(){
-		$data['main_breadcrumb'] = "Product";
-		$data['submain_breadcrumb1'] = "Add Product";
-		$data['sub_nav_active'] = "add_product";
-		$data['title_page'] = "Add Product";
+	public function add_product($id = 0){
+		
 		if($this->input->post()){
 			$rc = $this->product_m->addproduct();
 			
 			if($rc == false){
-				$data['post'] = $this->input->post();
-				
-				$this->load->view('product/add_product_v',$data);
+				$data = $this->input->post();
 			}
 			else{
-			
-				redirect('product/product_listing');
+				redirect('product/add_product/'. $rc);
 			}
 		}
-		else{
-			$this->load->view('product/add_product_v',$data);
+		if($id > 0){
+			$data = $this->product_m->get_product($id);
+			$data['color_query'] = $this->product_m->get_color($id);
+			// $data['submain_breadcrumb1'] = "Add Product";
+			$data['submain_breadcrumb1'] = "Edit Product";
+			$data['title_page'] = "Edit Product";
+		
 		}
+		else{
+			$data['submain_breadcrumb1'] = "Add Product";
+			$data['sub_nav_active'] = "add product";
+			$data['title_page'] = "Add Product";
+		}
+		
+		$data['main_breadcrumb'] = "Product";
+		
+		$this->load->view('product/add_product_v',$data);
+		
 	}
 	
 	public function product_remove(){
@@ -78,7 +92,7 @@ class Product extends CI_Controller {
 				if($rs == false){
 					$data['post'] = $this->input->post();
 				
-					$this->load->view('product/edit_product_v',$data);
+					$this->load->view('product/add_product_v',$data);
 				}
 				else{
 					redirect('product/edit/' . $id);
@@ -87,7 +101,7 @@ class Product extends CI_Controller {
 			else{
 				$data['post'] = $this->product_m->get_product($id);
 		
-				$this->load->view('product/edit_product_v',$data);
+				$this->load->view('product/add_product_v',$data);
 			}
 		}
 		else
