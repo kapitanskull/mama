@@ -120,7 +120,7 @@ class Product_m extends CI_Model
 			}
 		
 			$this->session->set_flashdata("success","Register product successful.");
-			return $roc;
+			return $last_insert_id;
 		}
 	}
 	
@@ -204,6 +204,18 @@ class Product_m extends CI_Model
 			
 			if($query->num_rows() > 0){
 				return $query->row_array();
+			}
+		}
+	}
+	
+	function get_color($id = 0){
+		$userid = $this->session->userdata('userid');
+		
+		if($id > 0){
+			$query = $this->db->query("SELECT * FROM product_color_management WHERE product_id=" . $this->db->escape($id) . "AND registrar_id=" . $this->db->escape($userid));
+			
+			if($query->num_rows() > 0){
+				return $query;
 			}
 		}
 	}

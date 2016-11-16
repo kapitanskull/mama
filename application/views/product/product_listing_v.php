@@ -157,7 +157,7 @@
 													<td rowspan="<?php echo $rowspan; ?>"> <?php echo $row->product_price; ?> </td>
 													<td rowspan="<?php echo $rowspan; ?>"> <?php echo $row->product_commission; ?> </td>
 													
-													<td rowspan="<?php echo $rowspan; ?>" style="text-align:center"> <a href="<?php echo site_url()?>product/edit/<?php echo $row->id?>" title="View/Edit" class="btn btn-icon-only blue"> <i class="fa fa-pencil"> </i> </a><a href="#" onclick="delete_product(<?php echo $row->id?>);" title="Delete Product" class="btn btn-icon-only red"><i class="fa fa-trash"></i></a></td>
+													<td rowspan="<?php echo $rowspan; ?>" style="text-align:center"> <a href="<?php echo site_url()?>product/add_product/<?php echo $row->id?>" title="View/Edit" class="btn btn-icon-only blue"> <i class="fa fa-pencil"> </i> </a><a href="#" onclick="delete_product(<?php echo $row->id?>);" title="Delete Product" class="btn btn-icon-only red"><i class="fa fa-trash"></i></a></td>
 												</tr>
 											<?php	
 												if($rowspan > 1){
