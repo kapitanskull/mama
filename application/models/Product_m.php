@@ -27,12 +27,14 @@ class Product_m extends CI_Model
 			}
 			
 			if($product_name != ''){
-				$product_name1 = strtolower($product_name);
-				$sql = "SELECT * FROM product WHERE product_name = " . $this->db->escape($product_name1). "AND product_registrar_id = " . $this->db->escape($this->session->userdata('userid'));			
-				$query = $this->db->query($sql);
-				if($query->num_rows() > 0) {
-					$this->set_message("error_p", "This product already exist in this system");
-					return false;
+				if($this->input->post('product_id')== ''){
+					$product_name1 = strtolower($product_name);
+					$sql = "SELECT * FROM product WHERE product_name = " . $this->db->escape($product_name1). "AND product_registrar_id = " . $this->db->escape($this->session->userdata('userid'));			
+					$query = $this->db->query($sql);
+					if($query->num_rows() > 0) {
+						$this->set_message("error_p", "This product already exist in this system");
+						return false;
+					}
 				}
 			}
 			
@@ -98,30 +100,77 @@ class Product_m extends CI_Model
 			$DBproduct['product_commission'] = number_format($product_commission,2);
 			$DBproduct['product_registrar_id'] = $this->session->userdata('userid');
   			
-			$rs = $this->db->insert('product', $DBproduct);
-			$last_insert_id =  $this->db->insert_id();
+			if($this->input->post('product_id') == ''){
+				$rs = $this->db->insert('product', $DBproduct);
+				$last_insert_id =  $this->db->insert_id();
 			
-			$color_name = $this->input->post('colour_name');
+				$color_name = $this->input->post('colour_name');
 			
-			foreach($color_name as $k => $v){
-			
-				$colour_name = $color_name[$k];
+				foreach($color_name as $k => $v){
 				
-				if($colour_name != ""){
-					$DBcolor['colour_name'] = $colour_name ;
+					$colour_name = $color_name[$k];
+					
+					if($colour_name != ""){
+						$DBcolor['colour_name'] = $colour_name ;
+					}
+					else{
+						$DBcolor['colour_name'] = "";
+					}
+					$DBcolor['product_id'] = $last_insert_id ;
+					$DBcolor['registrar_id'] = $this->session->userdata('userid');
+					
+					$roc = $this->db->insert('product_color_management', $DBcolor);
 				}
-				else{
-					$DBcolor['colour_name'] = "";
-				}
-				$DBcolor['product_id'] = $last_insert_id ;
-				$DBcolor['registrar_id'] = $this->session->userdata('userid');
-				
-				$roc = $this->db->insert('product_color_management', $DBcolor);
-			}
 		
-			$this->session->set_flashdata("success","Register product successful.");
-			return $last_insert_id;
+				$this->session->set_flashdata("success","Register product successful.");
+				return $last_insert_id;
+			}
+			else{
+				$id = $this->input->post('product_id');
+				
+				$this->db->where('id', $id);
+				$rs = $this->db->update('product', $DBproduct);
+				
+				// $p_color_id = $this->input->post('p_color_id');
+				$color_name = $this->input->post('colour_name');
+				// $color_names = $this->input->post('colour_name');
+				
+				// foreach($p_color_id as $k => $v){
+				foreach($color_name as $k => $v){
+					
+					if($v == ""){
+						//insert
+						//$color_name = $color_names[$k]
+					}
+					// $colour_name = $v;
+					$colour_name = $color_name[$k];
+					print_r($colour_name );
+					if($colour_name != ""){
+						$DBcolor['colour_name'] = $colour_name ;
+					}
+					else{
+						$DBcolor['colour_name'] = "";
+					}
+					
+					$this->db->where('product_id', $id);
+					$roc = $this->db->update('product_color_management', $DBcolor);
+				}
+				// exit();
+				
+				
+				$this->session->set_flashdata("success","Update product details successful.");
+				return $id;
+			}
 		}
+	}
+	
+	function product_edit(){
+		
+			$image_path = "uploads/";
+			$user_name = str_replace(" ","_",$this->session->userdata('name'));
+			$folder_name = $this->session->userdata('userid') . "_" . $user_name ;
+		
+		
 	}
 	
 	function product_listing(){

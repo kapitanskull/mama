@@ -43,6 +43,8 @@ class Product extends CI_Controller {
 			
 			if($rc == false){
 				$data = $this->input->post();
+				// print_r($data);
+				// exit();
 			}
 			else{
 				redirect('product/add_product/'. $rc);
@@ -51,7 +53,6 @@ class Product extends CI_Controller {
 		if($id > 0){
 			$data = $this->product_m->get_product($id);
 			$data['color_query'] = $this->product_m->get_color($id);
-			// $data['submain_breadcrumb1'] = "Add Product";
 			$data['submain_breadcrumb1'] = "Edit Product";
 			$data['title_page'] = "Edit Product";
 		
@@ -68,6 +69,8 @@ class Product extends CI_Controller {
 		
 	}
 	
+	
+	
 	public function product_remove(){
 		
 		$rs = $this->product_m->product_remove();
@@ -79,33 +82,5 @@ class Product extends CI_Controller {
 		redirect('product/product_listing/');
 	}
 	
-	public function edit($id = 0){
-		
-		$data['main_breadcrumb'] = "Product";
-		$data['submain_breadcrumb1'] = "Edit Product";
-		$data['title_page'] = "Edit Product";
-		
-		if($id > 0){
-			if($this->input->post()){
-				$rs = $this->product_m->save_product();
-				
-				if($rs == false){
-					$data['post'] = $this->input->post();
-				
-					$this->load->view('product/add_product_v',$data);
-				}
-				else{
-					redirect('product/edit/' . $id);
-				}
-			}
-			else{
-				$data['post'] = $this->product_m->get_product($id);
-		
-				$this->load->view('product/add_product_v',$data);
-			}
-		}
-		else
-			redirect("product/product_listing");
-	}
 
 }//end of login controller
