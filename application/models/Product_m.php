@@ -126,40 +126,35 @@ class Product_m extends CI_Model
 				return $last_insert_id;
 			}
 			else{
-				$id = $this->input->post('product_id');
+				$p_id = $this->input->post('product_id');
 				
-				$this->db->where('id', $id);
+				$this->db->where('id', $p_id);
 				$rs = $this->db->update('product', $DBproduct);
 				
-				// $p_color_id = $this->input->post('p_color_id');
+				$color_id = $this->input->post('colour_id');
 				$color_name = $this->input->post('colour_name');
-				// $color_names = $this->input->post('colour_name');
 				
-				// foreach($p_color_id as $k => $v){
-				foreach($color_name as $k => $v){
-					
+				foreach($color_id as $k => $v){
 					if($v == ""){
-						//insert
-						//$color_name = $color_names[$k]
-					}
-					// $colour_name = $v;
-					$colour_name = $color_name[$k];
-					print_r($colour_name );
-					if($colour_name != ""){
-						$DBcolor['colour_name'] = $colour_name ;
+						#insert new color name if user want to add new color during edit
+						$DBcolor['colour_name'] = $color_name[$k];
+						$DBcolor['product_id']  = $p_id;
+						$DBcolor['registrar_id'] = $this->session->userdata('userid');
+						$this->db->insert('product_color_management', $DBcolor);
 					}
 					else{
-						$DBcolor['colour_name'] = "";
+						if($color_name[$k] != ""){
+							$DBcolor['colour_name'] = $color_name[$k] ;
+						}
+						else{
+							$DBcolor['colour_name'] = "";
+						}
+						$this->db->where('id', $v);
+						$roc = $this->db->update('product_color_management', $DBcolor);
 					}
-					
-					$this->db->where('product_id', $id);
-					$roc = $this->db->update('product_color_management', $DBcolor);
 				}
-				// exit();
-				
-				
 				$this->session->set_flashdata("success","Update product details successful.");
-				return $id;
+				return $p_id;
 			}
 		}
 	}
@@ -240,6 +235,21 @@ class Product_m extends CI_Model
 				$rs = $this->db->query($sql);
 				// $this->audit_trail($this->db->last_query(), 'user_m.php', 'customer_remove()', 'Delete User');
 				
+				return $rs;
+			}
+		}
+	}
+	
+	function product_color_remove(){
+		$userid = $this->session->userdata('userid');
+		
+		if($this->input->post()){
+			$color_id = $this->input->post('color_id');
+			$product_id = $this->input->post('product_id');
+			if($color_id > 0 && $product_id > 0) {
+				$sql = "DELETE FROM product_color_management WHERE id=" . $this->db->escape($color_id) . "AND product_id=" . $this->db->escape($product_id) . "AND registrar_id=" . $this->db->escape($userid) ."LIMIT 1";
+				$rs = $this->db->query($sql);
+				// $this->audit_trail($this->db->last_query(), 'product_m.php', 'product_color_remove', 'Delete Color');
 				return $rs;
 			}
 		}

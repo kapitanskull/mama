@@ -29,29 +29,26 @@ class Product extends CI_Controller {
 		$data['color_query'] = $this->product_m->product_color($data['product_query']);
 		$data['pagination'] = $this->pagination->create_links();
 		
-		// echo "<pre>"; 
-		// print_r($data); 
-		// echo "</pre>";
-		// exit;
 		$this->load->view('product/product_listing_v',$data);
 	}
 	
-	public function add_product($id = 0){
+	public function form($id = 0){
 		
 		if($this->input->post()){
 			$rc = $this->product_m->addproduct();
 			
 			if($rc == false){
 				$data = $this->input->post();
-				// print_r($data);
-				// exit();
 			}
 			else{
-				redirect('product/add_product/'. $rc);
+				redirect('product/form/'. $rc);
 			}
 		}
 		if($id > 0){
 			$data = $this->product_m->get_product($id);
+			
+			#to convert certain character into html character.eg test!@#$%^&*())"'nama ni if did not use htmlentities , the output is test!@#$%^&*()) 
+			$data = array_map('htmlentities', $data); 
 			$data['color_query'] = $this->product_m->get_color($id);
 			$data['submain_breadcrumb1'] = "Edit Product";
 			$data['title_page'] = "Edit Product";
@@ -65,11 +62,9 @@ class Product extends CI_Controller {
 		
 		$data['main_breadcrumb'] = "Product";
 		
-		$this->load->view('product/add_product_v',$data);
+		$this->load->view('product/form_product_v',$data);
 		
 	}
-	
-	
 	
 	public function product_remove(){
 		
@@ -80,6 +75,11 @@ class Product extends CI_Controller {
 			$this->session->set_flashdata("success","Product has been deleted.");
 		
 		redirect('product/product_listing/');
+	}
+	
+	public function remove_productcolor(){
+		$rc = $this->product_m->product_color_remove();
+		echo $rc;
 	}
 	
 

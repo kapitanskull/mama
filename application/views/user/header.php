@@ -182,11 +182,11 @@
                                     <span class="title">Order Listing</span>
                                 </a>
                             </li>
-                            <li class="nav-item <?php if(isset($main_nav_active) && ($main_nav_active == "product_listing" || $main_nav_active == "add_product" )) echo $nav_active;  ?> ">
+                            <li class="nav-item <?php if(isset($main_nav_active) && ($main_nav_active == "product_listing" || $main_nav_active == "form" )) echo $nav_active;  ?> ">
                                 <a href="javascript:;" class="nav-link nav-toggle">
                                     <i class="icon-bag"></i>
                                     <span class="title">Product</span>
-                                    <span class="arrow <?php if(isset($main_nav_active) && ($main_nav_active == "product_listing" || $main_nav_active == "add_product" )) echo $nav_arrow;  ?>"></span>
+                                    <span class="arrow <?php if(isset($main_nav_active) && ($main_nav_active == "product_listing" || $main_nav_active == "form" )) echo $nav_arrow;  ?>"></span>
                                 </a>
                                 <ul class="sub-menu">
                                     <li class="nav-item <?php if(isset($sub_nav_active) && $sub_nav_active == "product_listing") echo $nav_active;  ?>">
@@ -194,8 +194,8 @@
                                             <span class="title">Product List</span>
                                         </a>
                                     </li>
-									  <li class="nav-item <?php if(isset($sub_nav_active) && $sub_nav_active == "add_product") echo $nav_active;  ?> ">
-                                        <a href="<?php echo base_url(); ?>product/add_product" class="nav-link ">
+									  <li class="nav-item <?php if(isset($sub_nav_active) && $sub_nav_active == "form") echo $nav_active;  ?> ">
+                                        <a href="<?php echo base_url(); ?>product/form" class="nav-link ">
                                             <span class="title">Add Product</span>
                                         </a>
                                     </li>

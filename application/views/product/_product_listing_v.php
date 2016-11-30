@@ -14,7 +14,7 @@
 		}
 	</script>			
 				<!-- BEGIN PAGE TITLE-->
-				<form id="remove_frm" name="remove_frm_product" action="<?php echo base_url()?>product/product_remove/" method="post">
+				<form id="remove_frm" name="remove_frm_product" action="<?php echo site_url()?>/product/product_remove/" method="post">
 					<input type="hidden" name="remove_product_id" id="remove_product_id" value="" />
 				</form>
 				<!-- END PAGE TITLE-->
@@ -37,26 +37,27 @@
 							</div>
 							
 							<div class="portlet-body">
-								<form class="form-horizontal" action="" method="POST">
+								<!--<form class="form-horizontal" action="http://mrd.my/rim_member/search/" method="POST">
 									<div class="form-group table-responsive">
-										<div class="col-sm-4" style="padding-left: 0;">
+										<div class="col-sm-3" style="padding-left: 0;">
 											&nbsp;
 										</div>
-										
 										<label class="control-label col-md-2" style="padding-left: 0;">Search By</label>
 										<div class="col-sm-2" style="padding-left: 0;">
-											<select class="form-control cari_berdasarkan" name="search_by1" id="search_by1">
+											<select class="form-control" name="search_by" id="search_by">
 												<option value="all" >All</option>
-												<option value="product_name" >Product Name</option>
-												<option value="color_name" >Available Colour</option>
-												<option value="low_to_high" >Lowest to Highest Price</option>
-												<option value="high_to_low" >Highest to Lowest Price</option>
+												<option value="ref_no" >Ref No.</option>
+												<option value="company_name" >Company Name</option>
+												<option value="company_reg_no" >Company Reg. No.</option>
+												<option value="category_name" >Category Name</option>
+												<option value="registration_status" >Registration Status</option>
+												<option value="status" >Status</option>
 											</select>
 										</div>
-										<div class="col-sm-3 search_field" style="padding-left: 0;">
-											<input type="text" class="form-control search_prod" id="search_product" name="search_product" placeholder="Search" value="" />
+										<div class="col-sm-3 search-all" style="padding-left: 0;">
+											<input type="text" class="form-control" id="search_member" name="search_member" placeholder="Search" value="" />
 										</div>
-										<!--<div class="col-md-3 search-reg-stat" style="padding-left: 0;" hidden>
+										<div class="col-md-3 search-reg-stat" style="padding-left: 0;" hidden>
 											<select class="form-control" name="search_member" id="search_registration_status">
 												<option value="pending" >Pending</option>
 												<option value="not complete" >Not Complete</option>
@@ -82,15 +83,15 @@
 												<option value="expired" >Expired</option>
 												<option value="pending" >Pending</option>
 											</select>
-										</div>-->
-										<div class="col-sm-1" style="padding-left: 0;">
-											<button class="btn blue-soft form-control search-btn" type="submit" name="search">Search <i class="fa fa-search"></i></button>
 										</div>
-										<!--<div class="col-sm-1" style="padding-left: 0;">
+										<div class="col-sm-1" style="padding-left: 0;">
+											<button class="btn btn-success form-control search-btn" type="submit" name="search">Search <i class="fa fa-search"></i></button>
+										</div>
+										<div class="col-sm-1" style="padding-left: 0;">
 											<button class="btn btn-default form-control reset-btn" type="submit" name="reset" value="reset">Reset <span class="fa fa-refresh"></span></button>
-										</div>-->
+										</div>
 									</div>
-								</form>
+								</form>-->
 								<?php 
 									$berjaya = $this->session->flashdata('success_p');
 									$error = $this->session->flashdata('error_p');
@@ -112,10 +113,9 @@
 											<tr>
 												<th width="4%"> # </th>
 												<th style="text-align:center" width="15%">Image </th>
-												<th style="text-align:center"> Product Name </th>
-												<th width="12%" style="text-align:center"> Available Colour</th>
-												<th style="text-align:center"> Price </th>
-												<th style="text-align:center"> Commision</th>
+												<th> Product Name </th>
+												<th> Price </th>
+												<th> Commision</th>
 												<th style="text-align:center" width="10%"> Action</th>
 											</tr>
 										</thead>
@@ -125,49 +125,27 @@
 
 											foreach($product_query->result() as $row) {
 												$alt++;
-												$rowspan = 1;
-												$array_color = array();
-												if(isset($color_query[$row->id]) && $color_query[$row->id]->num_rows() > 0){
-													$rowspan = $color_query[$row->id]->num_rows();
-													foreach($color_query[$row->id]->result() as $color) {
-														array_push($array_color,$color->colour_name); 
-													}					
-												}
-												else{
-													array_push($array_color, "-");
-												}
-												
-												
 											?>
 												<tr>
-													<td rowspan="<?php echo $rowspan; ?>"> <?php echo $alt; ?> </td>
-													<?php if($row->product_image_path != '' AND  file_exists($row->product_image_path) == true) { ?>
-														<td rowspan="<?php echo $rowspan; ?>">															
+													<td> <?php echo $alt; ?> </td>
+													<?php if($row->product_image_path != '') { ?>
+														<td>															
 															<a href="<?php echo base_url() . $row->product_image_path; ?>" class="fancybox-button" data-rel="fancybox-button">
                                                             <img class="img-responsive" src="<?php echo base_url() . $row->product_image_path; ?>" alt=""> </a>
 														</td>
 													<?php } else{ ?>
-														<td rowspan="<?php echo $rowspan; ?>"> 
+														<td> 
                                                             <img class="img-responsive" src="<?php echo base_url() ?>uploads/no_img.png" alt=""> </a> </td>
 													<?php } ?>
 													
-													<td rowspan="<?php echo $rowspan; ?>"> <?php echo $row->product_name; ?> </td>
-													<td> <?php echo $array_color[0]; ?></td>
-													<td rowspan="<?php echo $rowspan; ?>"> <?php echo $row->product_price; ?> </td>
-													<td rowspan="<?php echo $rowspan; ?>"> <?php echo $row->product_commission; ?> </td>
+													<td> <?php echo $row->product_name; ?> </td>
+													<td> <?php echo $row->product_price; ?> </td>
+													<td> <?php echo $row->product_commission; ?> </td>
 													
-													<td rowspan="<?php echo $rowspan; ?>" style="text-align:center"> <a href="<?php echo site_url()?>product/form/<?php echo $row->id?>" title="View/Edit" class="btn btn-icon-only blue"> <i class="fa fa-pencil"> </i> </a><a href="#" onclick="delete_product(<?php echo $row->id?>);" title="Delete Product" class="btn btn-icon-only red"><i class="fa fa-trash"></i></a></td>
+													<td style="text-align:center"> <a href="<?php echo site_url()?>product/edit/<?php echo $row->id?>" title="View/Edit" class="btn btn-icon-only blue"> <i class="fa fa-pencil"> </i> </a><a href="#" onclick="delete_product(<?php echo $row->id?>);" title="Delete Product" class="btn btn-icon-only red"><i class="fa fa-trash"></i></a></td>
 												</tr>
 											<?php	
-												if($rowspan > 1){
-													foreach($array_color as $k => $v){
-														if($k > 0){
-															echo "<tr><td>" . $v . "</td></tr>";
-														}
-													}
-												}
 											}
-											
 										}else {
 										?>
 										<td colspan="6" style="text-align:center"> No product to be listed </td>
@@ -189,23 +167,6 @@
 		<?php $this->load->view('user/footer'); ?>
 		<script src="<?php echo base_url();?>assets/global/plugins/fancybox/source/jquery.fancybox.pack.js" type="text/javascript"></script>
 		<script>
-		
-		function searchby_option(){
-			search_by = $('.cari_berdasarkan').val();
-			if(search_by == "low_to_high" || search_by == "high_to_low" ){
-				$('.search_field').hide("slow");
-			}
-			else{
-				$('.search_field').show("slow");
-			}
-		}
-		
-		$(function(){
-			$('.cari_berdasarkan').on('change', function(){
-				searchby_option()
-			});
-		});		
-		
 		window.setTimeout(function() {
 			$(".notify").fadeTo(500, 0).slideUp(500, function(){
 			$(this).remove(); 

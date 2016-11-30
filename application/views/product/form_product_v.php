@@ -8,13 +8,18 @@
                         <h1 class="page-title"> <?php echo $title_page; ?></h1>
 						<span class="help-block"> <font style="color:red;">*</font> <i>marked as mandatory</i> </span>
 							<?php $error = $this->session->flashdata('error_p');
-								  $berjaya = $this->session->flashdata('success_p');
+								  $berjaya = $this->session->flashdata('success');
 								if(isset($error)){
 							?>
 							<div class="alert bg-red-mint bg-font-red-mint alert-dismissable notify">
 								<button type="button" class="close" data-dismiss="alert" aria-hidden="true"></button>
 								<i class="fa fa-warning"></i> <strong>Error!</strong> <?php echo $error; ?> 
 							</div>
+								<?php } else if(isset($berjaya)) { ?>
+								<div class="alert bg-green-meadow bg-font-green-meadow alert-dismissable notify">
+									<button type="button" class="close" data-dismiss="alert" aria-hidden="true"></button>
+									<i class="fa fa-check-circle"></i> <strong>Success!</strong> <?php echo $berjaya; ?>
+								</div>
 								<?php } ?>
                         <!-- END PAGE TITLE-->
 						
@@ -24,19 +29,18 @@
 									<div class="portlet-title">
 										<div class="caption">
 											<i class="fa fa-gift" style="color:white"></i>Product Details
-											
 										</div>
 									</div>
 									<div class="portlet-body form">
 										<!-- BEGIN FORM-->
-										<form action="<?php echo base_url(); ?>product/add_product" class="form-horizontal" method="post" enctype="multipart/form-data" accept-charset="utf-8">
+										<form action="<?php echo base_url(); ?>product/form" class="form-horizontal" method="post" enctype="multipart/form-data" accept-charset="utf-8">
 											<div class="form-body">
 												<div class="row">
 													<div class="col-md-12">
 														<div class="form-group">
 															<label class="control-label col-md-2">Product Name <font style="color:red;">*</font></label>
 															<div class="col-md-8">
-																<input type="hidden" class="form-control" name="product_id" value="<?php echo (isset($id) ? $id : "") ?>">
+																<input type="hidden" class="form-control product_id" name="product_id" value="<?php echo (isset($id) ? $id : "") ?>">
 																<input type="text" class="form-control" placeholder="Product name" name="product_name" value="<?php echo (isset($product_name) ? $product_name : "") ?>">
 																<!--<span class="help-block"> This is inline help </span>-->
 															</div>
@@ -107,8 +111,11 @@
 																			<div class="col-md-4 ">
 																				<input type="text" class="form-control"  placeholder="" name="colour_name[]" 
 																				value="<?php echo $row->colour_name ?>">
+																				<input type="hidden" class="form-control color_id"  placeholder="" name="colour_id[]" 
+																				value="<?php echo $row->id ?>">
+																				
 																			</div>
-																			<a class="btn btn-danger button_remove_rowcolor"><span class="fa fa-times"></span></a>
+																			<a class="btn btn-danger button_remove_rowcolor" href="#static" data-toggle="modal"><span class="fa fa-times"></span></a>
 																		</div>
 															<?php		}
 																}
@@ -144,7 +151,6 @@
 														</div>
 													</div>
 												</div>
-												
 												<!--/row-->
 											</div>
 											<div class="form-actions">
@@ -181,6 +187,7 @@
 		<!-- BEGIN PAGE LEVEL PLUGIN -->
 		
 		<script src="<?php echo base_url();?>assets/global/plugins/moment.min.js" type="text/javascript"></script>
+		<script src="<?php echo base_url();?>assets/global/plugins/bootbox.min.js" type="text/javascript"></script>
 		
 		<!-- END PAGE LEVEL PLUGIN -->
 		<script>
@@ -216,6 +223,7 @@
 					
 				var newOrderRow = $($('.product_color')[0]).clone();
 				newOrderRow.find('input[name="colour_name[]"]').val("");
+				newOrderRow.find('input[name="colour_id[]"]').val("");
 				newOrderRow.find('.label_color').html("");
 				
 				$('.available_color').append(newOrderRow);
@@ -223,8 +231,42 @@
 			});
 			
 			$('.available_color').on("click", ".button_remove_rowcolor", function(){
-				$(this).closest('.product_color').remove();
-				removeBtnChck();
+				color_id = $(this).closest('.product_color').find('.color_id').val();
+				product_id = $('.product_id').val();
+				var this_1 = $(this);
+				if(color_id > 0 && product_id > 0){
+					
+					bootbox.confirm({
+						message: "Are you sure to delete this product colour?",
+						buttons: {
+							confirm: {
+								label: 'Yes',
+								className: 'btn red-thunderbird'
+							},
+							cancel: {
+								label: 'No',
+								className: 'btn-default'
+							}
+						},
+						callback: function (result) {
+							if(result == true){
+								$.ajax({
+								url: base_url + "product/remove_productcolor",
+								data: {'color_id' : color_id, 'product_id' : product_id},
+								type: 'POST',
+								success: function(result){
+									removeBtnChck();
+								}
+								});
+								this_1.closest('.product_color').remove();
+							}
+						}
+					});
+				}
+				else{
+					$(this).closest('.product_color').remove();
+					removeBtnChck();
+				}
 			});
 		});
 		
