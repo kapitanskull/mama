@@ -26,32 +26,32 @@ class User extends CI_Controller {
 		$this->load->view('user/user_dashboard_v',$data);
 	}
 	
-	public function add(){
-		$data['product_query'] = $this->user_m->getProductDetails();
-		
-		$data['main_breadcrumb'] = "Dashboard";
-		$data['submain_breadcrumb1'] = "Customer";
-		$data['submain_breadcrumb2'] = "Register Customer";
-		$data['current_process'] = "add";
-		#For side bar active-highlight for current selected menu which by trigger "active open" in class = "nav-item"   
-		$data['sub_nav_active'] ="register_customer";
-		
+	public function customer_form($id = 0){
+ 
 		if($this->input->post()){
 			$rc = $this->user_m->addcustomer();
 			
 			if($rc == false){
-				$data['post'] = $this->input->post();
-			
-				$this->load->view('user/add_customer_v',$data);
+				$data = $this->input->post();
 			}
 			else{
-				redirect('user/listing');
+				redirect('user/customer_form' . $rc);
 			}
 		}
-		else{
+		if($id > 0){
 			// $data['product_query'] = $this->user_m->getProductDetails();
-			$this->load->view('user/add_customer_v',$data);
+			$data['submain_breadcrumb2'] = "Customer Update";
+		}  
+		else{
+			$data['submain_breadcrumb2'] = "Register Customer";
 		}
+		
+		$data['main_breadcrumb'] = "Dashboard";
+		$data['submain_breadcrumb1'] = "Customer";
+		$data['product_query'] = $this->user_m->getProductDetails();
+		
+		$this->load->view('user/form_customer_v',$data);
+		
 	}
 	
 	public function listing(){

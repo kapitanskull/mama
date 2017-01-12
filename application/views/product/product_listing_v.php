@@ -28,67 +28,23 @@
 								<div class="caption">
 									Product Listing
 								</div>
-								<!--<div class="tools">
-									<a href="javascript:;" class="collapse"> </a>
-									<a href="#portlet-config" data-toggle="modal" class="config"> </a>
-									<a href="javascript:;" class="reload"> </a>
-									<a href="javascript:;" class="remove"> </a>
-								</div>-->
 							</div>
 							
 							<div class="portlet-body">
-								<form class="form-horizontal" action="" method="POST">
+								<form class="form-horizontal" action="<?php echo base_url()?>product/search" method="POST">
 									<div class="form-group table-responsive">
 										<div class="col-sm-4" style="padding-left: 0;">
 											&nbsp;
 										</div>
-										
-										<label class="control-label col-md-2" style="padding-left: 0;">Search By</label>
-										<div class="col-sm-2" style="padding-left: 0;">
-											<select class="form-control cari_berdasarkan" name="search_by1" id="search_by1">
-												<option value="all" >All</option>
-												<option value="product_name" >Product Name</option>
-												<option value="color_name" >Available Colour</option>
-												<option value="low_to_high" >Lowest to Highest Price</option>
-												<option value="high_to_low" >Highest to Lowest Price</option>
-											</select>
+										<div class="col-sm-4" style="padding-left: 0;">
+											&nbsp;
 										</div>
 										<div class="col-sm-3 search_field" style="padding-left: 0;">
-											<input type="text" class="form-control search_prod" id="search_product" name="search_product" placeholder="Search" value="" />
+											<input type="text" class="form-control search_prod" id="search_product" name="search_product" placeholder="Search" value="<?php echo isset($search_product) ? $search_product : ""; ?>" />
 										</div>
-										<!--<div class="col-md-3 search-reg-stat" style="padding-left: 0;" hidden>
-											<select class="form-control" name="search_member" id="search_registration_status">
-												<option value="pending" >Pending</option>
-												<option value="not complete" >Not Complete</option>
-												<option value="approved" >Approved</option>
-												<option value="rejected" >Rejected</option>
-											</select>
-										</div>
-										<div class="col-md-3 search-category-name" style="padding-left: 0;" hidden>
-											<select class="form-control" name="search_member" id="search_category_name">
-												<option value="A" >A</option>
-												<option value="B" >B</option>
-												<option value="C" >C</option>
-												<option value="D" >D</option>
-												<option value="E" >E</option>
-												<option value="F" >F</option>
-												<option value="G" >G</option>
-											</select>
-										</div>
-										<div class="col-md-3 search-status" style="padding-left: 0;" hidden>
-											<select class="form-control" name="search_member" id="search_status">
-												<option value="active" >Active</option>
-												<option value="inactive" >Inactive</option>
-												<option value="expired" >Expired</option>
-												<option value="pending" >Pending</option>
-											</select>
-										</div>-->
 										<div class="col-sm-1" style="padding-left: 0;">
 											<button class="btn blue-soft form-control search-btn" type="submit" name="search">Search <i class="fa fa-search"></i></button>
 										</div>
-										<!--<div class="col-sm-1" style="padding-left: 0;">
-											<button class="btn btn-default form-control reset-btn" type="submit" name="reset" value="reset">Reset <span class="fa fa-refresh"></span></button>
-										</div>-->
 									</div>
 								</form>
 								<?php 
@@ -170,7 +126,7 @@
 											
 										}else {
 										?>
-										<td colspan="6" style="text-align:center"> No product to be listed </td>
+										<td colspan="7" style="text-align:center"> No product to be listed </td>
 										<?php }?>
 										</tbody>
 									</table>
@@ -189,22 +145,9 @@
 		<?php $this->load->view('user/footer'); ?>
 		<script src="<?php echo base_url();?>assets/global/plugins/fancybox/source/jquery.fancybox.pack.js" type="text/javascript"></script>
 		<script>
-		
-		function searchby_option(){
-			search_by = $('.cari_berdasarkan').val();
-			if(search_by == "low_to_high" || search_by == "high_to_low" ){
-				$('.search_field').hide("slow");
-			}
-			else{
-				$('.search_field').show("slow");
-			}
-		}
-		
 		$(function(){
-			$('.cari_berdasarkan').on('change', function(){
-				searchby_option()
-			});
-		});		
+			document.getElementById("search_product").focus();
+		});
 		
 		window.setTimeout(function() {
 			$(".notify").fadeTo(500, 0).slideUp(500, function(){

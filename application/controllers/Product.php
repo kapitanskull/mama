@@ -20,12 +20,59 @@ class Product extends CI_Controller {
 	{
 		redirect('product/product_listing');
 	}
+	
+	function test(){
+		$today_date = date("Y-m-d");
+		$prev_date = date("Y-m-d", strtotime($today_date . " -1 Week"));
+		// $database_date = "2017-01-01";
+		$database_date = "2016-12-31";
+		echo ' $today_date : ' . $today_date . '<br/>';
+		echo ' $prev_date : ' . $prev_date . '<br/>';
+		echo ' $prev_date : ' . strtotime($database_date) . '<br/>' . strtotime($prev_date);
+		
+		if(strtotime($database_date) >= strtotime($prev_date) AND strtotime($database_date) <= strtotime($today_date)){
+			echo "masuk";
+		}
+		else
+			echo "keluar";
+	}
+	
 	public function product_listing(){
 		$data['main_breadcrumb'] = "Product";
 		$data['submain_breadcrumb1'] = "Product Listing";
 		$data['sub_nav_active'] = "product_listing";
 		
 		$data['product_query'] = $this->product_m->product_listing();
+		$data['color_query'] = $this->product_m->product_color($data['product_query']);
+		$data['pagination'] = $this->pagination->create_links();
+		
+		$this->load->view('product/product_listing_v',$data);
+	}
+	
+	public function search($keyword64 = null){
+		#Process the posted data, then redirect back to this function
+		if($this->input->post()) {
+			$product = $this->input->post('search_product');
+			if($product == ""){
+				redirect("product/product_listing");
+			}
+			
+			#We Base64 Encode the search String, it's for safe url passing.
+			$keyword = trim(base64_encode(json_encode($this->input->post())), '=.');
+			redirect("product/search/" . $keyword);	
+		  
+			exit();
+		}
+		if($keyword64 != null) {
+			$where = $this->product_m->search_product($keyword64);
+		}
+		$key_word = json_decode(base64_decode($keyword64));
+		$data['search_product'] = $key_word->search_product;
+		$data['main_breadcrumb'] = "Product";
+		$data['submain_breadcrumb1'] = "Product Listing";
+		$data['sub_nav_active'] = "product_listing";
+		
+		$data['product_query'] = $this->product_m->product_listing($where);
 		$data['color_query'] = $this->product_m->product_color($data['product_query']);
 		$data['pagination'] = $this->pagination->create_links();
 		
@@ -81,6 +128,8 @@ class Product extends CI_Controller {
 		$rc = $this->product_m->product_color_remove();
 		echo $rc;
 	}
+	
+
 	
 
 }//end of login controller

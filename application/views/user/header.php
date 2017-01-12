@@ -160,21 +160,11 @@
                                 </a>
                             </li>
 							
-                            <li class="nav-item <?php if(isset($main_nav_active) && $main_nav_active == "add") echo $nav_active;  ?> ">
-                                <a href="<?php echo base_url(); ?>user/add" class="nav-link">
+                            <li class="nav-item <?php if(isset($main_nav_active) && $main_nav_active == "customer_form") echo $nav_active;  ?> ">
+                                <a href="<?php echo base_url(); ?>user/customer_form" class="nav-link">
                                     <i class="icon-users"></i>
                                     <span class="title">Register Customer</span>
-                                    <!--<span class="selected"></span>
-                                    <span class="arrow  //if(isset($main_nav_active) && $main_nav_active == "add") echo $nav_arrow;  ?>"></span>-->
                                 </a>
-                                <!--<ul class="sub-menu">
-                                    <li class="nav-item  <?php//if(isset($sub_nav_active) && $sub_nav_active == "register_customer") echo $nav_active;  ?>">
-                                        <a href="<?php //echo base_url(); ?>user/add" class="nav-link ">
-                                            <span class="title">Register Customer</span>
-                                            <span class="selected"></span>
-                                        </a>
-                                    </li>
-                                </ul>-->
                             </li>
 							 <li class="nav-item <?php if(isset($main_nav_active) && $main_nav_active == "listing") echo $nav_active;  ?>  ">
                                 <a href="<?php echo base_url(); ?>user/listing" class="nav-link">

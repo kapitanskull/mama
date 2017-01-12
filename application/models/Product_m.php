@@ -159,19 +159,9 @@ class Product_m extends CI_Model
 		}
 	}
 	
-	function product_edit(){
-		
-			$image_path = "uploads/";
-			$user_name = str_replace(" ","_",$this->session->userdata('name'));
-			$folder_name = $this->session->userdata('userid') . "_" . $user_name ;
-		
-		
-	}
-	
-	function product_listing(){
+	function product_listing($where = ""){
 		$userid = $this->session->userdata('userid');
-		
-		$query = $this->db->query("SELECT COUNT(id) AS total FROM product WHERE product_registrar_id=" . $this->db->escape($userid))->row();
+		$query = $this->db->query("SELECT COUNT(id) AS total FROM product WHERE product_registrar_id= " . $this->db->escape($userid) . $where)->row();
 		$data['total_rows'] = $query->total;
 		
 		$config['base_url'] = base_url() . 'product/product_listing/';
@@ -192,9 +182,34 @@ class Product_m extends CI_Model
 				$sql = ' LIMIT 0, ' . $config['per_page'];
 			}
 		}
-		$query = $this->db->query("SELECT * FROM product WHERE product_registrar_id=" . $this->db->escape($userid) . "ORDER BY id DESC" .  $sql);
+		$query = $this->db->query("SELECT * FROM product WHERE product_registrar_id = " . $this->db->escape($userid) . $where . " ORDER BY id DESC" .  $sql);
 
 		return $query;
+	}
+	
+	function search_product($keyword64)
+	{
+		$userid = $this->session->userdata('userid');
+		$data = json_decode(base64_decode($keyword64));
+		$where = "";
+		$product = $data->search_product;
+	
+		$where_sql = '';
+		if($product != '') {
+			$product_id = array();
+			$sql_color = "SELECT * FROM `product_color_management` WHERE `colour_name` LIKE " . $this->db->escape("%" . $product . "%") . " AND registrar_id = " . $this->db->escape($userid);
+			$query = $this->db->query($sql_color);
+			if($query->num_rows() > 0) { 
+				foreach($query->result() as $row) {
+					$product_id[] = $row->product_id;
+				}
+			}
+			if(count($product_id) > 0){
+				$where .= " AND `id` IN (" . implode(",",$product_id) . ")";
+			}
+			$where .= (isset($where) && $where != "" ? " OR " : " AND ") . "( `product_name` LIKE " . $this->db->escape("%" . $product . "%") . " OR `product_price` LIKE " . $this->db->escape("%" . $product . "%"). " OR product_commission LIKE " .  $this->db->escape("%" . $product . "%") . ")" ;
+		}
+		return $where;
 	}
 	
 	function product_color($data = false){
@@ -278,91 +293,9 @@ class Product_m extends CI_Model
 			}
 		}
 	}
-	
-	function save_product(){
-		$image_path = "uploads/";
-		$user_name = str_replace(" ","_",$this->session->userdata('name'));
-		$folder_name = $this->session->userdata('userid') . "_" . $user_name ;
 		
-		if($this->input->post()){
-			
-			$id = $this->input->post('product_id');
-			$product_name = $this->input->post('product_name');
-			$product_price = $this->input->post('product_price');
-			$product_commission = $this->input->post('product_commission');
-			
-			if($product_name == ''){
-				$this->set_message("error_edit", "Please enter product name.");
-				return false;
-			}
-			
-			if($product_price == ''){
-				$this->set_message("error_edit", "Please enter product price.");
-				return false;
-			}
-			if(!is_numeric($product_price)){
-				$this->set_message("error_edit", "Price contain only digits.");
-				return false;
-			}
-			
-			if($product_commission == ''){
-				$this->set_message("error_edit", "Please enter product commision.");
-				return false;
-			}
-			if(!is_numeric($product_commission)){
-				$this->set_message("error_edit", "Commision contain only digits.");
-				return false;
-			}
-			
-			if(is_numeric($product_commission) && is_numeric($product_price)){
-				$product_commission = number_format($product_commission,2);
-				$product_price = number_format($product_price,2);
-				if($product_commission  > $product_price){
-					$this->set_message("error_edit", "Commision cannot bigger than sell price");
-					return false;
-				}
-			}
-			
-			if($_FILES["product_image"]["name"]!=''){
-				
-				if(!is_dir($image_path . $folder_name)){
-					mkdir($image_path . $folder_name,0777,TRUE);
-				}
-				
-				$config['upload_path'] = $image_path . $folder_name;				
-				$config['allowed_types'] = 'png|jpg';
-				$config['max_size'] = '2048'; // 2Mb
-				
-				$this->load->library('upload', $config);
-				
-				if (!$this->upload->do_upload('product_image'))
-				{
-					#case - failure
-					$upload_error = $this->upload->display_errors();
-					$this->set_message("error_edit", $upload_error);
-					return false;
-				}
-				
-				else
-				{
-					#case - success
-					$upload_data = $this->upload->data();
-					$path = $upload_data['file_name'];
-					$DBproduct['product_image_path'] = $image_path . $folder_name . "/" . $path;
-				}
-			}
-			
-			$DBproduct['product_name'] = $product_name;
-			$DBproduct['product_price'] = number_format($product_price,2);
-			$DBproduct['product_commission'] = number_format($product_commission,2);
-			  			
-			$this->db->where('id', $id);
-	    	$rs = $this->db->update('product', $DBproduct);
-			$this->session->set_flashdata("success_edit","Upadate product details successful.");
-			
-			return $rs;
-		}
-	}
+	#search user
+
 	
 	function set_message($status,$mesej)
 	{
